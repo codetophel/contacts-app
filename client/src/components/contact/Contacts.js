@@ -14,15 +14,15 @@ const Contacts = () => {
   return (
     <Fragment>
       <TransitionGroup>
-        {filtered !== null
+        {filtered
           ? filtered.map((contact) => (
-              <CSSTransition>
-                <ContactItem key={contact.id} contact={contact} />
+              <CSSTransition key={contact.id} timeout={500} classNames='item'>
+                <ContactItem contact={contact} />
               </CSSTransition>
             ))
           : contacts.map((contact) => (
-              <CSSTransition>
-                <ContactItem key={contact.id} contact={contact} />
+              <CSSTransition key={contact.id} timeout={500} classNames='item'>
+                <ContactItem contact={contact} />
               </CSSTransition>
             ))}
       </TransitionGroup>
