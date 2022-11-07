@@ -7,6 +7,7 @@ import Register from './components/auth/Register';
 import './App.css';
 import Login from './components/auth/Login';
 import PageNotFound from './components/pages/PageNotFound';
+import PrivateRoute from './components/routing/PrivateRoute';
 
 import ContactState from './context/contact/ContactState';
 import AuthState from './context/auth/AuthState';
@@ -29,7 +30,7 @@ const App = () => {
               <div className='container'>
                 <Alerts />
                 <Routes>
-                  <Route path='/' element={<Home />} />
+                  <Route path='/' element={<PrivateRoute component={Home} />} />
                   <Route path='about' element={<About />} />
                   <Route path='register' element={<Register />} />
                   <Route path='login' element={<Login />} />
