@@ -1,9 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
+import AuthContext from '../../context/auth/authContext';
 
 const Register = () => {
   const alertContext = useContext(AlertContext);
+  const authContext = useContext(AuthContext);
+
   const { setAlert } = alertContext;
+  const { register, error, clearError } = authContext;
+
+  useEffect(() => {
+    if (error === 'User already exists') {
+      setAlert(error, 'danger');
+    }
+    clearError();
+    //eslint-disable-next-line
+  }, [error]);
 
   const [user, setUser] = useState({
     name: '',
@@ -28,7 +40,11 @@ const Register = () => {
     } else if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      console.log('Regstered successfully');
+      register({
+        name,
+        email,
+        password,
+      });
     }
   };
   return (
@@ -47,6 +63,7 @@ const Register = () => {
               value={name}
               onChange={onChange}
               required
+              autoComplete={name}
             />
           </div>
           <div className='form-group'>
@@ -57,6 +74,7 @@ const Register = () => {
               value={email}
               onChange={onChange}
               required
+              autoComplete={email}
             />
           </div>
           <div className='form-group'>
@@ -68,6 +86,7 @@ const Register = () => {
               onChange={onChange}
               required
               minLength={6}
+              autoComplete={password}
             />
           </div>
           <div className='form-group'>
@@ -79,6 +98,7 @@ const Register = () => {
               onChange={onChange}
               required
               minLength={6}
+              autoComplete={password}
             />
           </div>
           <div>
