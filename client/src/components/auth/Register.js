@@ -1,21 +1,28 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AlertContext from '../../context/alert/alertContext';
 import AuthContext from '../../context/auth/authContext';
 
-const Register = () => {
+const Register = (props) => {
   const alertContext = useContext(AlertContext);
   const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
-  const { register, error, clearError } = authContext;
+  const { register, error, clearError, isAuthenticated } = authContext;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
     if (error === 'User already exists') {
       setAlert(error, 'danger');
+      clearError();
     }
-    clearError();
+
     //eslint-disable-next-line
-  }, [error]);
+  }, [error, isAuthenticated, props.history]);
 
   const [user, setUser] = useState({
     name: '',
@@ -52,7 +59,7 @@ const Register = () => {
       <div className='form-container'>
         <h1>
           Account
-          <span className='text-primary'>Register</span>
+          <span className='text-primary'>{'   '}Register</span>
         </h1>
         <form onSubmit={onSubmit}>
           <div className='form-group'>
