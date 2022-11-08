@@ -9,7 +9,7 @@ const PrivateRoute = ({ component: Component }) => {
 
   const navigate = useNavigate();
 
-  if (loading) return <Spinner />;
+  // if (loading) return <Spinner />;
   if (isAuthenticated) return <Component />;
   return navigate('/login');
 };

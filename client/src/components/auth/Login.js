@@ -19,6 +19,10 @@ const Login = (props) => {
 
   const { email, password } = user;
 
+  if (isAuthenticated) {
+    navigate('/');
+  }
+
   useEffect(() => {
     if (error === 'Invalid Credentials') {
       setAlert(error, 'danger');
@@ -26,10 +30,6 @@ const Login = (props) => {
     }
     //eslint-disable-next-line
   }, [error, isAuthenticated, props.history]);
-
-  if (isAuthenticated) {
-    navigate('/');
-  }
 
   const onChange = (e) => {
     setUser({
@@ -49,6 +49,7 @@ const Login = (props) => {
       });
     }
   };
+
   return (
     <div>
       <div className='form-container'>
