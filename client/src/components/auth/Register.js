@@ -12,15 +12,15 @@ const Register = (props) => {
 
   const navigate = useNavigate();
 
+  if (isAuthenticated) {
+    navigate('/');
+  }
+
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
     if (error === 'User already exists') {
       setAlert(error, 'danger');
       clearError();
     }
-
     //eslint-disable-next-line
   }, [error, isAuthenticated, props.history]);
 

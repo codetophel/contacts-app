@@ -20,15 +20,16 @@ const Login = (props) => {
   const { email, password } = user;
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
     if (error === 'Invalid Credentials') {
       setAlert(error, 'danger');
       clearError();
     }
     //eslint-disable-next-line
   }, [error, isAuthenticated, props.history]);
+
+  if (isAuthenticated) {
+    navigate('/');
+  }
 
   const onChange = (e) => {
     setUser({
