@@ -93,8 +93,10 @@ img {
 /* Cards */
 .card {
   padding: 1rem;
-  border: #ccc 1px dotted;
+  border: var(--light-color) 1px dotted;
   margin: 0.7rem 0;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 /* List */
@@ -190,10 +192,18 @@ img {
   padding: 0.4rem 1.3rem;
   font-size: 1rem;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
   margin-right: 0.5rem;
   transition: opacity 0.2s ease-in;
   outline: none;
+}
+
+.btn:hover {
+  color: var(--primary-color);
+  background: var(--light-color);
+  border: 2px solid var(--primary-color);
+  font-weight: bold;
 }
 
 .btn-link {
@@ -296,6 +306,7 @@ img {
 /* Forms */
 input {
   margin: 1.2rem 0;
+  border-radius: 6px;
 }
 
 .form-text {
@@ -328,6 +339,7 @@ button {
 
 .form-group input {
   margin: 0.2rem 0;
+  border-radius: 6px;
 }
 
 .form-container {
@@ -398,6 +410,20 @@ table th {
 .item-exit-active {
   opacity: 0;
   transition: opacity 1000ms ease-in;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #000000;
+    color: var(--light-color);
+  }
+  .card {
+    border: var(--primary-color) 2px solid;
+    border-radius: 6px;
+    background: var(--light-color);
+    color: #000000;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  }
 }
 
 /* Mobile Styles */

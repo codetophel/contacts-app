@@ -14,7 +14,7 @@ const ContactItem = ({ contact }) => {
   };
 
   return (
-    <div className='card bg-light'>
+    <div className='card'>
       <h3 className='text-left text-primary'>
         {name}
         {'  '}{' '}
