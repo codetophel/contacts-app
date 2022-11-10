@@ -7,7 +7,7 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import PageNotFound from './components/pages/PageNotFound';
 import Alerts from './components/layout/Alerts';
-import setAuthToken from './utils/setAuthToken';
+// import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
 
 import ContactState from './context/contact/ContactState';
@@ -16,9 +16,9 @@ import AlertState from './context/alert/AlertState';
 
 import './App.css';
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
+// if (localStorage.token) {
+//   setAuthToken(localStorage.token);
+// }
 
 const App = () => {
   return (

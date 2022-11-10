@@ -326,6 +326,7 @@ textarea {
   padding: 0.4rem;
   font-size: 1.2rem;
   border: 1px solid #ccc;
+  outline: none;
 }
 
 input[type='submit'],
@@ -340,6 +341,7 @@ button {
 .form-group input {
   margin: 0.2rem 0;
   border-radius: 6px;
+  outline: none;
 }
 
 .form-container {

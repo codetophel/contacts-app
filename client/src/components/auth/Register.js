@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AlertContext from '../../context/alert/alertContext';
 import AuthContext from '../../context/auth/authContext';
 
-const Register = (props) => {
+const Register = () => {
   const alertContext = useContext(AlertContext);
   const authContext = useContext(AuthContext);
 
@@ -22,7 +22,7 @@ const Register = (props) => {
       clearError();
     }
     //eslint-disable-next-line
-  }, [error, isAuthenticated, props.history]);
+  }, [error, isAuthenticated]);
 
   const [user, setUser] = useState({
     name: '',
@@ -71,7 +71,6 @@ const Register = (props) => {
               value={name}
               onChange={onChange}
               required
-              autoComplete={name}
             />
           </div>
           <div className='form-group'>
@@ -82,7 +81,6 @@ const Register = (props) => {
               value={email}
               onChange={onChange}
               required
-              autoComplete={email}
             />
           </div>
           <div className='form-group'>
@@ -94,7 +92,6 @@ const Register = (props) => {
               onChange={onChange}
               required
               minLength={6}
-              autoComplete={password}
             />
           </div>
           <div className='form-group'>
@@ -106,7 +103,6 @@ const Register = (props) => {
               onChange={onChange}
               required
               minLength={6}
-              autoComplete={password}
             />
           </div>
           <div>
