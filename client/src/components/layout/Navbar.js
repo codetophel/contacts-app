@@ -1,28 +1,29 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useAuth, logout } from '../../context/auth/AuthState';
-import { useContacts, clearContacts } from '../../context/contact/ContactState';
+import AuthContext from '../../context/auth/authContext';
+import ContactContext from '../../context/contact/contactContext';
 
-const Navbar = ({ title, icon }) => {
-  const [authState, authDispatch] = useAuth();
-  const { isAuthenticated, user } = authState;
+const Navbar = ({ icon, title }) => {
+  const authContext = useContext(AuthContext);
+  const contactContext = useContext(ContactContext);
 
-  // we just need the contact dispatch without state.
-  const contactDispatch = useContacts()[1];
+  const { logout, isAuthenticated, user } = authContext;
+  const { clearContacts } = contactContext;
 
   const onLogout = () => {
-    logout(authDispatch);
-    clearContacts(contactDispatch);
+    logout();
+    clearContacts();
   };
 
   const authLinks = (
     <Fragment>
-      <li>Hello {user && user.name}</li>
+      <li> Hello {user && user.name}</li>
       <li>
-        <Link onClick={onLogout} to='/login'>
-          <i className='fas fa-sign-out-alt' />{' '}
-          <span className='hide-sm'>Logout</span>
+        <Link to='/login'>
+          <i className='fas fa-sign-out-alt' onClick={onLogout}>
+            <span className='hide-sm'>{'  '}Logout</span>
+          </i>
         </Link>
       </li>
     </Fragment>
@@ -41,24 +42,24 @@ const Navbar = ({ title, icon }) => {
 
   return (
     <div className='navbar bg-primary'>
-      <h1>
-        <Link to='/'>
-          <i className={icon} /> {title}
-        </Link>
-      </h1>
+      <h2>
+        <i className={icon}></i>
+        {'  '}
+        {title}
+      </h2>
       <ul>{isAuthenticated ? authLinks : guestLinks}</ul>
     </div>
   );
 };
 
 Navbar.propTypes = {
-  title: PropTypes.string.isRequired,
-  icon: PropTypes.string,
+  icon: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
-
+<i class=''></i>;
 Navbar.defaultProps = {
-  title: 'Contact Keeper',
-  icon: 'fas fa-id-card-alt',
+  icon: 'fa-solid fa-address-card',
+  title: 'Contacts App',
 };
 
 export default Navbar;

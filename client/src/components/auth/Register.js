@@ -1,21 +1,28 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AlertContext from '../../context/alert/alertContext';
-import { useAuth, clearErrors, register } from '../../context/auth/AuthState';
+import AuthContext from '../../context/auth/authContext';
 
-const Register = (props) => {
+const Register = () => {
   const alertContext = useContext(AlertContext);
-  const [authState, authDispatch] = useAuth();
-  const { error, isAuthenticated } = authState;
+  const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
+  const { register, error, clearError, isAuthenticated } = authContext;
+
+  const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    navigate('/');
+  }
 
   useEffect(() => {
     if (error === 'User already exists') {
       setAlert(error, 'danger');
-      clearErrors(authDispatch);
+      clearError();
     }
-  }, [error, isAuthenticated, props.history, setAlert, authDispatch]);
+    //eslint-disable-next-line
+  }, [error, isAuthenticated]);
 
   const [user, setUser] = useState({
     name: '',
@@ -26,24 +33,27 @@ const Register = (props) => {
 
   const { name, email, password, password2 } = user;
 
-  const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
+  const onChange = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (name === '' || email === '' || password === '') {
-      setAlert('Please enter all fields', 'danger');
+    if (!name || !email || !password) {
+      setAlert('Please, enter all fields', 'danger');
     } else if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      register(authDispatch, {
+      register({
         name,
         email,
         password,
       });
     }
   };
-
-  if (isAuthenticated) return <Navigate to='/' />;
 
   return (
     <div>

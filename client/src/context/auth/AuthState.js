@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useEffect } from 'react';
+import React, { useReducer } from 'react';
 import axios from 'axios';
 import AuthContext from './authContext';
 import authReducer from './authReducer';
@@ -14,79 +14,6 @@ import {
   CLEAR_ERRORS,
 } from '../types';
 
-// Create a custom hook to use the auth context
-
-export const useAuth = () => {
-  const { state, dispatch } = useContext(AuthContext);
-  return [state, dispatch];
-};
-
-// Action creators
-// NOTE: These could be moved to a separate file like in redux
-// but they remain here for ease of students transitioning
-
-// Load User
-export const loadUser = async (dispatch) => {
-  try {
-    const res = await axios.get('/api/auth');
-
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data,
-    });
-  } catch (err) {
-    dispatch({ type: AUTH_ERROR });
-  }
-};
-
-// Register User
-export const register = async (dispatch, formData) => {
-  try {
-    const res = await axios.post('/api/users', formData);
-
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
-
-    loadUser(dispatch);
-  } catch (err) {
-    dispatch({
-      type: REGISTER_FAIL,
-      payload: err.response.data.msg,
-    });
-  }
-};
-
-// Login User
-export const login = async (dispatch, formData) => {
-  try {
-    const res = await axios.post('/api/auth', formData);
-
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res.data,
-    });
-
-    loadUser(dispatch);
-  } catch (err) {
-    dispatch({
-      type: LOGIN_FAIL,
-      payload: err.response.data.msg,
-    });
-  }
-};
-
-// Logout
-export const logout = (dispatch) => {
-  dispatch({ type: LOGOUT });
-};
-
-// Clear Errors
-export const clearErrors = (dispatch) => dispatch({ type: CLEAR_ERRORS });
-
-// AuthState Provider Component
-
 const AuthState = (props) => {
   const initialState = {
     token: localStorage.getItem('token'),
@@ -98,21 +25,102 @@ const AuthState = (props) => {
 
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // set token on initial app loading
-  setAuthToken(state.token);
+  // load user
+  const loadUser = async () => {
+    //load token into global header
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
 
-  // load user on first run or refresh
-  if (state.loading) {
-    loadUser(dispatch);
-  }
+    try {
+      const res = await axios.get('/api/auth');
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: AUTH_ERROR,
+        payload: err.response.data.msg,
+      });
+    }
+  };
 
-  // 'watch' state.token and set headers and local storage on any change
-  useEffect(() => {
-    setAuthToken(state.token);
-  }, [state.token]);
+  //register user
+  const register = async (formData) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/api/users', formData, config);
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: res.data,
+      });
+
+      loadUser();
+    } catch (err) {
+      dispatch({
+        type: REGISTER_FAIL,
+        payload: err.response.data.msg,
+      });
+    }
+  };
+
+  //login user
+  const login = async (formData) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/api/auth', formData, config);
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data,
+      });
+
+      loadUser();
+    } catch (err) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: err.response.data.msg,
+      });
+    }
+  };
+
+  //logout
+  const logout = () => {
+    dispatch({
+      type: LOGOUT,
+    });
+  };
+
+  //clear errors
+  const clearError = () => {
+    dispatch({
+      type: CLEAR_ERRORS,
+    });
+  };
 
   return (
-    <AuthContext.Provider value={{ state: state, dispatch }}>
+    <AuthContext.Provider
+      value={{
+        user: state.user,
+        token: state.token,
+        isAuthenticated: state.isAuthenticated,
+        error: state.error,
+        loading: state.loading,
+        register,
+        loadUser,
+        login,
+        logout,
+        clearError,
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );
