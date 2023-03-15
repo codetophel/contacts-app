@@ -10,7 +10,7 @@ connectDb();
 //to accept body data
 app.use(express.json({ extended: false }));
 
-// app.get('/', (req, res) => res.json({ msg: 'Welcome to Contacts App API...' }));
+app.get('/', (req, res) => res.json({ msg: 'Welcome to Contacts App API...' }));
 
 //Define Routes
 app.use('/api/users', require('./routes/users'));

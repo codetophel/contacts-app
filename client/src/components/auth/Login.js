@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AlertContext from '../../context/alert/alertContext';
-import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../context/auth/authContext';
+import { Navigate } from 'react-router-dom';
+import { useAuth, clearErrors, login } from '../../context/auth/AuthState';
 
-const Login = (props) => {
+const Login = () => {
   const alertContext = useContext(AlertContext);
-  const authContext = useContext(AuthContext);
-
   const { setAlert } = alertContext;
-  const { login, error, clearError, isAuthenticated } = authContext;
 
-  const navigate = useNavigate();
+  const [authState, authDispatch] = useAuth();
+  const { error, isAuthenticated } = authState;
+
+  useEffect(() => {
+    if (error === 'Invalid Credentials') {
+      setAlert(error, 'danger');
+      clearErrors(authDispatch);
+    }
+  }, [error, isAuthenticated, authDispatch, setAlert]);
 
   const [user, setUser] = useState({
     email: '',
@@ -19,37 +24,20 @@ const Login = (props) => {
 
   const { email, password } = user;
 
-  if (isAuthenticated) {
-    navigate('/');
-  }
-
-  useEffect(() => {
-    if (error === 'Invalid Credentials') {
-      setAlert(error, 'danger');
-      clearError();
-    }
-    //eslint-disable-next-line
-  }, [error, isAuthenticated, props.history]);
-
-  const onChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) {
+    if (email === '' || password === '') {
       setAlert('Please fill in all fields', 'danger');
     } else {
-      login({
+      login(authDispatch, {
         email,
         password,
       });
     }
   };
-
+  if (isAuthenticated) return <Navigate to='/' />;
   return (
     <div>
       <div className='form-container'>
