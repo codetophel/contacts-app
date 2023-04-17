@@ -1,5 +1,4 @@
 import {
-  GET_CONTACTS,
   ADD_CONTACT,
   DELETE_CONTACT,
   SET_CURRENT,
@@ -8,6 +7,7 @@ import {
   FILTER_CONTACTS,
   CLEAR_FILTER,
   CONTACT_ERROR,
+  GET_CONTACTS,
   CLEAR_CONTACTS,
 } from '../types';
 
@@ -17,11 +17,13 @@ const contactReducer = (state, action) => {
       return {
         ...state,
         contacts: action.payload,
+        loading: false,
       };
     case ADD_CONTACT:
       return {
         ...state,
         contacts: [action.payload, ...state.contacts],
+        loading: false,
       };
     case UPDATE_CONTACT:
       return {
@@ -29,6 +31,7 @@ const contactReducer = (state, action) => {
         contacts: state.contacts.map((contact) =>
           contact._id === action.payload._id ? action.payload : contact
         ),
+        loading: false,
       };
     case DELETE_CONTACT:
       return {
@@ -36,6 +39,7 @@ const contactReducer = (state, action) => {
         contacts: state.contacts.filter(
           (contact) => contact._id !== action.payload
         ),
+        loading: false,
       };
     case CLEAR_CONTACTS:
       return {
@@ -58,9 +62,9 @@ const contactReducer = (state, action) => {
     case FILTER_CONTACTS:
       return {
         ...state,
-        filtered: state.contacts.filter(({ name, email }) => {
-          const testString = `${name}${email}`.toLowerCase();
-          return testString.includes(action.payload.toLowerCase());
+        filtered: state.contacts.filter((contact) => {
+          const regex = new RegExp(`${action.payload}`, 'gi');
+          return contact.name.match(regex) || contact.email.match(regex);
         }),
       };
     case CLEAR_FILTER:
@@ -74,7 +78,7 @@ const contactReducer = (state, action) => {
         error: action.payload,
       };
     default:
-      throw new Error(`Unsupported type of: ${action.type}`);
+      return state;
   }
 };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AlertContext from '../../context/alert/alertContext';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
 
 const Login = (props) => {
@@ -10,7 +10,7 @@ const Login = (props) => {
   const { setAlert } = alertContext;
   const { login, error, clearError, isAuthenticated } = authContext;
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [user, setUser] = useState({
     email: '',
@@ -20,7 +20,7 @@ const Login = (props) => {
   const { email, password } = user;
 
   if (isAuthenticated) {
-    navigate('/');
+    <Navigate to='/' />;
   }
 
   useEffect(() => {
